@@ -44,6 +44,13 @@
             border-color: #4f46e5;
             box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
         }
+
+        /* Estilos para el tooltip/popover de reemplazo */
+        .replacement-trigger:hover .replacement-popover {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="text-slate-800">
@@ -221,6 +228,32 @@
     </div>
 
     <script>
+        // 替代关系数据字典
+        const modelReplacements = {
+            "RG-RAP2260(G)": ["1. RAP2260", "2. RAP2266", "3. RAP62", "4. RAP2200(E)"],
+            "RG-EG406XS-P": ["1. EG406XS + ES206MG-P", "2. EG1510XS + NBS3300-8MG2XS-P"],
+            "RG-RAP72": ["1. RAP72Pro", "2. RAP73Pro"],
+            "RG-EG310GH-P-E": ["1. EG210G-P", "2. EG310GH-E + ES209GC-P o ES210GS-P"],
+            "RG-RAP2260(E)": ["1. RAP2260", "2. RAP2260(H)"],
+            "RG-RAP72Pro": ["1. RAP72", "2. RAP73Pro"],
+            "RG-EG310GH-E": ["1. EG209GS", "2. EG305GH-P-E", "3. EG210G-P", "4. EG310GH-P-E"],
+            "RG-ES210GS-P": ["1. ES209GC-P", "2. ES209MG-P", "3. ES220GS-P"],
+            "RG-RAP2260": ["1. RAP2260(G)", "2. RAP2266", "3. RAP2260(E)"],
+            "RG-EG406XS": ["1. EG406XS-P", "2. EG310GH-E", "3. EG710XS"],
+            "RG-ES209MG-P": ["1. NBS3300-8MG-P", "2. NBS3300-16MG-P"],
+            "RG-ES206GS-P": ["1. ES205GC-P", "2. ES209GC-P", "3. ES210GS-P"],
+            "RG-RAP62": ["1. RAP2266", "2. RAP2260(G)", "3. RAP2260", "4. RAP72"],
+            "RG-ES220GS-P": ["1. ES228GS-P"],
+            "RG-RAP1260": ["1. RAP62-WALL", "2. RAP1200(P)"],
+            "RG-EG1510XS": ["1. EG710XS", "2. NBR6215-E"],
+            "RG-RAP2266": ["1. RAP2260", "2. RAP2260(G)", "3. RAP62"],
+            "RG-RAP62-OD": ["1. RAP52-OD", "2. RAP6202(G)", "3. RAP6262(G)", "4. RAP6260(G)"],
+            "RG-RAP6262(G)": ["1. RAP6262", "2. RAP6260(G)", "3. RAP62-OD"],
+            "RG-NBS3200-24GT4XS": ["1. RG-NBS3200-24SFP/8GT4XS", "2. RG-NBS3200-48GT4XS"],
+            "RG-NBS3300-16MG4XS-HP": ["1. RG-CS86-24MG4VS-UP"],
+            "RG-NBS5500-12XS": ["1. RG-CS86-20XS4VS2QXS-D"]
+        };
+
         function resetApp() { location.reload(); }
 
         function goToStep(stepId, progress) {
@@ -280,7 +313,6 @@
             let n_raw = bedrooms / 3;
             let n_bedroom_aps = 1;
             
-            // Lógica similar a Excel: IF(MOD(Bedrooms/3*10, 10) > 3, Roundup, Rounddown)
             if (( (n_raw * 10) % 10 ) > 3) {
                 n_bedroom_aps = Math.ceil(n_raw);
             } else {
@@ -320,6 +352,26 @@
                 if(item.id === 'GW') icon = 'fa-microchip';
                 if(item.id.includes('SW')) icon = 'fa-server';
                 
+                // 检查是否有替代型号
+                let replacementHtml = '';
+                const reps = modelReplacements[item.model];
+                if (reps && reps.length > 0) {
+                    replacementHtml = `
+                        <span class="ml-2 relative replacement-trigger inline-block no-print align-middle">
+                            <button class="text-[9px] font-bold text-orange-600 border border-orange-200 bg-orange-50 px-1.5 py-0.5 rounded-md hover:bg-orange-100 transition-colors">
+                                ¿Sin stock?
+                            </button>
+                            <div class="replacement-popover absolute bottom-full left-0 mb-2 w-64 p-3 bg-slate-900 text-white rounded-xl shadow-2xl opacity-0 visibility-hidden transform translate-y-2 transition-all duration-200 z-[60] pointer-events-none text-left">
+                                <div class="text-[10px] font-bold text-orange-400 uppercase mb-2 border-b border-white/10 pb-1">Modelos de reemplazo:</div>
+                                <div class="space-y-1.5 font-normal normal-case">
+                                    ${reps.map(r => `<div class="text-xs">${r}</div>`).join('')}
+                                </div>
+                                <div class="absolute -bottom-1 left-4 w-2 h-2 bg-slate-900 transform rotate-45"></div>
+                            </div>
+                        </span>
+                    `;
+                }
+
                 return `
                 <div class="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-2xl hover:bg-white hover:border-indigo-200 transition-all group mb-3">
                     <div class="flex items-center gap-4">
@@ -328,7 +380,9 @@
                         </div>
                         <div>
                             <div class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">${item.label}</div>
-                            <div class="font-extrabold text-slate-900">${item.model}</div>
+                            <div class="font-extrabold text-slate-900 flex items-center flex-wrap">
+                                ${item.model}${replacementHtml}
+                            </div>
                         </div>
                     </div>
                     <div class="text-right">
