@@ -39,6 +39,13 @@
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
 
+        /* Estilos para el tooltip/popover de reemplazo */
+        .replacement-trigger:hover .replacement-popover {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
         @media print {
             .no-print { display: none !important; }
             body { background-color: white; }
@@ -226,22 +233,94 @@
         const catalog = {
             devices: {
                 gateway: {
-                    EG105GP: { model: "RG-EG105G-P", price: 699, icon: "fas fa-microchip", label: "Gateway Gigabit" },
-                    EG310GH: { model: "RG-EG310GH-E", price: 1199, icon: "fas fa-microchip", label: "Gateway Core" },
-                    EG310GHP: { model: "RG-EG310GH-P-E", price: 1299, icon: "fas fa-microchip", label: "Gateway PoE Alto Rend." },
-                    EG406XS: { model: "RG-EG406XS", price: 1699, icon: "fas fa-tachometer-alt", label: "Gateway Core 10G" },
-                    EG406XSP: { model: "RG-EG406XS-P", price: 1899, icon: "fas fa-tachometer-alt", label: "Gateway PoE 10G" }
+                    EG105GP: { 
+                        model: "RG-EG105G-P", 
+                        price: 699, 
+                        icon: "fas fa-microchip", 
+                        label: "Gateway Gigabit",
+                        replacements: ["1. RG-EG210G-P", "2. RG-EG105G + RG-ES206GS-P", "3. RG-EG305GH-P-E"] 
+                    },
+                    EG310GH: { 
+                        model: "RG-EG310GH-E", 
+                        price: 1199, 
+                        icon: "fas fa-microchip", 
+                        label: "Gateway Core",
+                        replacements: ["1. RG-EG209GS", "2. RG-EG305GH-P-E", "3. RG-EG210G-P", "4. RG-EG310GH-P-E"]
+                    },
+                    EG310GHP: { 
+                        model: "RG-EG310GH-P-E", 
+                        price: 1299, 
+                        icon: "fas fa-microchip", 
+                        label: "Gateway PoE Alto Rend.",
+                        replacements: ["1. RG-EG210G-P", "2. RG-EG310GH-E + RG-ES209GC-P o RG-ES210GS-P"]
+                    },
+                    EG406XS: { 
+                        model: "RG-EG406XS", 
+                        price: 1699, 
+                        icon: "fas fa-tachometer-alt", 
+                        label: "Gateway Core 10G",
+                        replacements: ["1. RG-EG406XS-P", "2. RG-EG310GH-E", "3. RG-EG710XS"]
+                    },
+                    EG406XSP: { 
+                        model: "RG-EG406XS-P", 
+                        price: 1899, 
+                        icon: "fas fa-tachometer-alt", 
+                        label: "Gateway PoE 10G",
+                        replacements: ["1. RG-EG406XS + RG-ES206MG-P", "2. RG-EG1510XS + NBS3300-8MG2XS-P"]
+                    }
                 },
                 switch: {
-                    ES210GSP: { model: "RG-ES210GS-P", price: 999, icon: "fas fa-server", label: "Switch Acceso PoE" },
-                    ES209MGP: { model: "RG-ES209MG-P", price: 1599, icon: "fas fa-server", label: "Switch Acceso PoE 2.5G" }
+                    ES210GSP: { 
+                        model: "RG-ES210GS-P", 
+                        price: 999, 
+                        icon: "fas fa-server", 
+                        label: "Switch Acceso PoE",
+                        replacements: ["1. RG-ES209GC-P", "2. RG-ES209MG-P", "3. RG-ES220GS-P"]
+                    },
+                    ES209MGP: { 
+                        model: "RG-ES209MG-P", 
+                        price: 1599, 
+                        icon: "fas fa-server", 
+                        label: "Switch Acceso PoE 2.5G",
+                        replacements: ["1. NBS3300-8MG-P", "2. NBS3300-16MG-P"]
+                    }
                 },
                 ap: {
-                    RAP2260G: { model: "RG-RAP2260(G)", price: 899, icon: "fas fa-wifi", label: "AP Wi-Fi 6" },
-                    RAP2260E: { model: "RG-RAP2260(E)", price: 1099, icon: "fas fa-wifi", label: "AP Wi-Fi 6 Alta Densidad" },
-                    RAP2260: { model: "RG-RAP2260", price: 899, icon: "fas fa-wifi", label: "AP Wi-Fi 6 Pro" },
-                    RAP72: { model: "RG-RAP72", price: 1599, icon: "fas fa-bolt", label: "AP Wi-Fi 7" },
-                    RAP72Pro: { model: "RG-RAP72Pro", price: 2199, icon: "fas fa-bolt", label: "AP Wi-Fi 7 Pro" }
+                    RAP2260G: { 
+                        model: "RG-RAP2260(G)", 
+                        price: 899, 
+                        icon: "fas fa-wifi", 
+                        label: "AP Wi-Fi 6",
+                        replacements: ["1. RG-RAP2260", "2. RG-RAP2266", "3. RG-RAP62", "4. RG-RAP2200(E)"]
+                    },
+                    RAP2260E: { 
+                        model: "RG-RAP2260(E)", 
+                        price: 1099, 
+                        icon: "fas fa-wifi", 
+                        label: "AP Wi-Fi 6 Alta Densidad",
+                        replacements: ["1. RG-RAP2260", "2. RG-RAP2260(H)"]
+                    },
+                    RAP2260: { 
+                        model: "RG-RAP2260", 
+                        price: 899, 
+                        icon: "fas fa-wifi", 
+                        label: "AP Wi-Fi 6 Pro",
+                        replacements: ["1. RG-RAP2260(G)", "2. RG-RAP2266", "3. RG-RAP2260(E)"]
+                    },
+                    RAP72: { 
+                        model: "RG-RAP72", 
+                        price: 1599, 
+                        icon: "fas fa-bolt", 
+                        label: "AP Wi-Fi 7",
+                        replacements: ["1. RG-RAP72Pro", "2. RG-RAP73Pro"]
+                    },
+                    RAP72Pro: { 
+                        model: "RG-RAP72Pro", 
+                        price: 2199, 
+                        icon: "fas fa-bolt", 
+                        label: "AP Wi-Fi 7 Pro",
+                        replacements: ["1. RG-RAP72", "2. RG-RAP73Pro"]
+                    }
                 }
             }
         };
@@ -440,21 +519,45 @@
         function renderPlanColumn(containerId, items, color) {
             const container = document.getElementById(containerId);
             const iconBg = color === 'blue' ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-800';
-            container.innerHTML = items.map(item => `
-                <div class="flex items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                    <div class="w-10 h-10 ${iconBg} rounded-xl flex items-center justify-center mr-4">
-                        <i class="${item.icon}"></i>
-                    </div>
-                    <div class="flex-grow">
-                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-tight">${item.label}</div>
-                        <div class="font-bold text-sm">${item.model}</div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-[10px] text-slate-400">Cant.</div>
-                        <div class="font-bold text-blue-600">${item.qty} <span class="text-xs font-normal text-slate-400">und</span></div>
+            container.innerHTML = items.map(item => {
+                let replacementHtml = '';
+                if (item.replacements && item.replacements.length > 0) {
+                    replacementHtml = `
+                        <span class="ml-2 relative replacement-trigger inline-block no-print align-middle">
+                            <button class="text-[10px] font-bold text-orange-600 border border-orange-200 bg-orange-50 px-1.5 py-0.5 rounded-md hover:bg-orange-100 transition-colors">
+                                ¿Sin stock?
+                            </button>
+                            <div class="replacement-popover absolute bottom-full left-0 mb-2 w-64 p-3 bg-slate-900 text-white rounded-xl shadow-2xl opacity-0 visibility-hidden transform translate-y-2 transition-all duration-200 z-[60] pointer-events-none text-left">
+                                <div class="text-[10px] font-bold text-orange-400 uppercase mb-2 border-b border-white/10 pb-1">Modelos de reemplazo:</div>
+                                <div class="space-y-1.5 font-normal normal-case">
+                                    ${item.replacements.map(r => `<div class="text-xs">${r}</div>`).join('')}
+                                </div>
+                                <div class="absolute -bottom-1 left-4 w-2 h-2 bg-slate-900 transform rotate-45"></div>
+                            </div>
+                        </span>
+                    `;
+                }
+
+                return `
+                <div class="flex flex-col p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 ${iconBg} rounded-xl flex items-center justify-center mr-4">
+                            <i class="${item.icon}"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <div class="text-[10px] text-slate-400 font-bold uppercase tracking-tight">${item.label}</div>
+                            <div class="font-bold text-sm inline-block items-center">
+                                ${item.model}${replacementHtml}
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[10px] text-slate-400">Cant.</div>
+                            <div class="font-bold text-blue-600">${item.qty} <span class="text-xs font-normal text-slate-400">und</span></div>
+                        </div>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function showEngineerSupport(area, staff) {
